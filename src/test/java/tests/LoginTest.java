@@ -1,40 +1,49 @@
 package tests;
 
+import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import static com.codeborne.selenide.Selenide.open;
+import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class LoginTest extends BaseTest{
+@Owner("mkarpovich")
+@Feature("Authorization")
+@Link(value = "My_GitHab", url = "https://github.com/krivelevamaari-spec/Qase")
+public class LoginTest extends BaseTest {
 
     @BeforeEach
     void openLoginPage() {
+        step("Открыть страницу авторизации");
         loginPage.openPage("/login");
     }
 
     @Test
     @DisplayName("Проверка авторизации пользователя при валидных логине и пароле")
+    @Story("Успешная авторизация с корректными учетными данными")
+    @Severity(SeverityLevel.BLOCKER)
     @Tags({
             @Tag("BLOCKER"),
             @Tag("UI-test")
     })
-    public void userMustBeAutWithValidLoginAndPassword(){
+    public void userMustBeAutWithValidLoginAndPassword() {
         loginPage.setValueEmailInput("akytat@mailto.plus")
-                 .setValuePasswordInput("20091989Qwe!!!")
-                 .clickSignInButton();
+                .setValuePasswordInput("20091989Qwe!!!")
+                .clickSignInButton();
 
-        Assertions.assertAll(
-                () -> Assertions.assertNotEquals("Projects!!!", projectPage.titleMustHaveText()),
-                () -> Assertions.assertTrue(projectPage.titleMustHaveText().startsWith("Proj")),
-                () -> Assertions.assertEquals("Projects", projectPage.titleMustHaveText())
-        );
+        step("Ожидаемый результат: открыта страница Projects", () -> {
+            Assertions.assertAll(
+                    () -> Assertions.assertNotEquals("Projects!!!", projectPage.titleMustHaveText()),
+                    () -> Assertions.assertTrue(projectPage.titleMustHaveText().startsWith("Proj")),
+                    () -> Assertions.assertEquals("Projects", projectPage.titleMustHaveText())
+            );
+        });
     }
 
-    @ParameterizedTest(name = "Проверка отказа в авторизации пользователя без ввода емайл и пароля")
+    @Story("Неудачная попытка входа с невалидными учетными данными")
+    @Severity(SeverityLevel.BLOCKER)
     @Tags({
             @Tag("BLOCKER"),
             @Tag("UI-test")
@@ -44,25 +53,34 @@ public class LoginTest extends BaseTest{
             "akytat@mailto.plus, ",
             ", "
     })
-    void errorMessageShouldBeVisibleWithEnterInvalidData(String email, String password){
+    @ParameterizedTest(name = "Проверка получения сообщения об ошибке при попытке авторизации пользователя " +
+            "без ввода логина: {0}, пароля: {1} и с отсутствующими данными")
+    void errorMessageShouldBeVisibleWithEnterInvalidData(String email, String password) {
         loginPage.setValueEmailInput(email)
-                 .setValuePasswordInput(password)
-                 .clickSignInButton();
+                .setValuePasswordInput(password)
+                .clickSignInButton();
 
-        assertEquals("This field is required",loginPage.getErrorMessage(),
-                "Текст сообщения не совпадает");
+        step("Ожидаемый результат: получено сообщение об ошибке", () ->
+                assertEquals("This field is required", loginPage.getErrorMessage(),
+                        "Текст сообщения не совпадает")
+        );
     }
 
+    @Story("Неудачная попытка входа с некорректными учетными данными")
+    @Severity(SeverityLevel.BLOCKER)
     @Tags({
             @Tag("BLOCKER"),
             @Tag("UI-test")
     })
-    @CsvFileSource(resources = "/testData/incorrectData.csv" )
-    @ParameterizedTest(name = "Проверка отказа в авторизации пользователя с невалидным логином: {0} и паролем: {1}")
-    void alertErrorMessageShouldBeVisibleWithEnterInvalidData(String email, String password){
+    @CsvFileSource(resources = "/testData/loginTestData/incorrectDates.scv")
+    @ParameterizedTest(name = "Проверка получения сообщения об ошибке при попытке авторизации пользователя " +
+            "с помощью некорректного логина: {0} и пароля: {1}")
+    void alertErrorMessageShouldBeVisibleWithEnterIncorrectData(String email, String password) {
         loginPage.setValueEmailInput(email)
-                 .setValuePasswordInput(password)
-                 .clickSignInButton()
-                 .alertErrorMessage();
+                .setValuePasswordInput(password)
+                .clickSignInButton();
+
+        step("Ожидаемый результат: получено сообщение об ошибке", () ->
+                loginPage.alertErrorMessage());
     }
 }

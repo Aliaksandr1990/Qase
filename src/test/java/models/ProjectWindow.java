@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CreateProjectWindow {
+public class ProjectWindow {
     String projectName;
     String projectCode;
-    String description;
+    String projectDescription;
 }
