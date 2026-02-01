@@ -1,11 +1,13 @@
-package tests;
+package tests.ui;
 
 import io.qameta.allure.*;
 import models.CreateProjectFactory;
-import models.ProjectWindow;
+import models.request.project.ProjectRequestModel;
 import org.junit.jupiter.api.*;
+import tests.BaseTest;
 
 import static io.qameta.allure.Allure.step;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Owner("mkarpovich")
 @Feature("Project")
@@ -19,7 +21,7 @@ public class ProjectTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Проверка создания нового проекта")
+    @DisplayName("Проверка создания нового проекта с валидными данными")
     @Story("Успешное создание нового проекта")
     @Severity(SeverityLevel.BLOCKER)
     @Tags({
@@ -33,16 +35,16 @@ public class ProjectTest extends BaseTest {
 
         projectPage.clickCreateProjectButton();
 
-        ProjectWindow createProject = CreateProjectFactory.getRandomData();
-        String expectedProjectCode = createProject.getProjectCode();
+        ProjectRequestModel createProject = CreateProjectFactory.getRandomData();
+        String expectedProjectCode = createProject.getCode();
 
         projectPage.createProject(createProject)
                 .checkRadioButtonPrivate()
                 .chekRadioButtonPublic()
-                .clickSaveProjectButton();
+                .clickSaveProjectButton()
+                .checkThatTheProjectHasBeenCreated(expectedProjectCode);
 
-        step("Убедиться в корректности результата", () ->
-                projectPage.checkThatTheProjectHasBeenCreated(expectedProjectCode));
+        projectFactory.deleteProject(expectedProjectCode);
     }
 
     @Test
@@ -60,16 +62,13 @@ public class ProjectTest extends BaseTest {
 
         projectPage.clickCreateProjectButton();
 
-        ProjectWindow notCreateProject = CreateProjectFactory.getWrongRandomData();
+        ProjectRequestModel notCreateProject = CreateProjectFactory.getWrongRandomData();
 
         projectPage.createProject(notCreateProject)
                 .checkRadioButtonPrivate()
                 .chekRadioButtonPublic()
-                .clickSaveProjectButton();
-
-        step("Ожидаемый результат: получено сообщение об ошибке", () ->
-                projectPage.checkThatTheProjectHasBeenNotCreated()
-        );
+                .clickSaveProjectButton()
+                .checkThatTheProjectHasBeenNotCreated();
     }
 
     @Test
@@ -87,19 +86,13 @@ public class ProjectTest extends BaseTest {
 
         projectPage.clickCreateProjectButton();
 
-        ProjectWindow createProject = CreateProjectFactory.getRandomData();
-        String expectedProjectCode = createProject.getProjectCode();
+        ProjectRequestModel createProject = CreateProjectFactory.getRandomData();
+        String projectTitle = createProject.getTitle();
 
         projectPage.createProject(createProject)
-                .checkRadioButtonPrivate()
-                .chekRadioButtonPublic()
-                .clickSaveProjectButton();
-
-        step("Убедиться в корректности результата", () ->
-                projectPage.checkThatTheProjectHasBeenCreated(expectedProjectCode)
-        );
-
-        projectPage.openProjectPage();
-        projectPage.deleteCreatedProject();
+                        .clickSaveProjectButton()
+                        .openProjectPage()
+                        .deleteCreatedProject()
+                        .checkThatProjectIsDeleted(projectTitle);
     }
 }

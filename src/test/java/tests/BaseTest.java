@@ -3,15 +3,18 @@ package tests;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
+import models.CreateProjectFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import pages.LoginPage;
 import pages.ProjectPage;
+import tests.api.steps.ProjectSteps;
 
 public class BaseTest {
 
-    LoginPage loginPage;
-    ProjectPage projectPage;
+    protected LoginPage loginPage;
+    protected ProjectPage projectPage;
+    protected CreateProjectFactory projectFactory;
 
     @BeforeAll
     public static void configuration() {
@@ -27,5 +30,6 @@ public class BaseTest {
     public void setUp() {
         loginPage = new LoginPage();
         projectPage = new ProjectPage();
+        projectFactory = new CreateProjectFactory();
     }
 }

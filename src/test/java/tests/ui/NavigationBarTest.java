@@ -1,7 +1,8 @@
-package tests;
+package tests.ui;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import tests.BaseTest;
 
 public class NavigationBarTest extends BaseTest {
 

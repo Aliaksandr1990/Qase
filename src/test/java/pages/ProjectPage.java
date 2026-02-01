@@ -2,10 +2,11 @@ package pages;
 
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import models.ProjectWindow;
+import models.request.project.ProjectRequestModel;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static java.lang.String.format;
 import static pages.pageElements.Input.fillInputWithData;
 
 public class ProjectPage extends BasePage {
@@ -25,6 +26,7 @@ public class ProjectPage extends BasePage {
             $x("//label[.//span[text()='Private']]//input");
     private static final SelenideElement RADIOBUTTON_PUBLIC =
             $x("//label[.//span[text()='Public']]//input");
+    String projectProjectsList = "//tr/ancestor::tbody//div/div/a[text()='%s']";
 
     @Step("Вернуться на страницу Projects")
     public ProjectPage openProjectPage() {
@@ -44,10 +46,10 @@ public class ProjectPage extends BasePage {
     }
 
     @Step("Создать новый проект")
-    public ProjectPage createProject(ProjectWindow data) {
-        fillInputWithData("For example: Web Application", data.getProjectName());
-        fillInputWithData("For example: WA", data.getProjectCode());
-        DESCRIPTION_TEXT_AREA.setValue(data.getProjectDescription());
+    public ProjectPage createProject(ProjectRequestModel data) {
+        fillInputWithData("For example: Web Application", data.getTitle());
+        fillInputWithData("For example: WA", data.getCode());
+        DESCRIPTION_TEXT_AREA.setValue(data.getDescription());
         return this;
     }
 
@@ -56,13 +58,13 @@ public class ProjectPage extends BasePage {
         SAVE_PROJECT_BUTTON.shouldBe(visible).click();
         return this;
     }
-
+    @Step("Убедиться, что проект создан")
     public ProjectPage checkThatTheProjectHasBeenCreated(String expectedProjectCode) {
         TITLE_CREATED_PROJECT.shouldBe(visible)
                 .shouldHave(text(expectedProjectCode));
         return this;
     }
-
+    @Step("Получить сообщение об ошибке при создании проекта с невалидными данными")
     public ProjectPage checkThatTheProjectHasBeenNotCreated() {
         ERROR_MESSAGE.shouldBe(visible);
         return this;
@@ -87,6 +89,12 @@ public class ProjectPage extends BasePage {
     public ProjectPage chekRadioButtonPublic() {
         RADIOBUTTON_PUBLIC.scrollIntoView(true)
                 .shouldNotBe(selected);
+        return this;
+    }
+
+    @Step("Проверка отсутствия проекта в списке")
+    public ProjectPage checkThatProjectIsDeleted(String projectTitle){
+        $x(format(projectProjectsList,projectTitle)).shouldNotBe(visible);
         return this;
     }
 }
