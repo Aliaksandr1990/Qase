@@ -2,7 +2,7 @@ package tests.ui;
 
 import io.qameta.allure.*;
 import models.CreateProjectFactory;
-import models.request.project.ProjectRequestModel;
+import models.request.project.post.ProjectRequestModel;
 import org.junit.jupiter.api.*;
 import tests.BaseTest;
 
@@ -44,7 +44,7 @@ public class ProjectTest extends BaseTest {
                 .clickSaveProjectButton()
                 .checkThatTheProjectHasBeenCreated(expectedProjectCode);
 
-        projectFactory.deleteProject(expectedProjectCode);
+        projectFactory.deleteProject(expectedProjectCode, 200);
     }
 
     @Test

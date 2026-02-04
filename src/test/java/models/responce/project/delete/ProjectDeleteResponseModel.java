@@ -1,4 +1,4 @@
-package models.responce.project;
+package models.responce.project.delete;
 
 import lombok.Data;
 

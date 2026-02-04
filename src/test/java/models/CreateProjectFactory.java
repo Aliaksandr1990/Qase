@@ -1,7 +1,7 @@
 package models;
 
 
-import models.request.project.ProjectRequestModel;
+import models.request.project.post.ProjectRequestModel;
 import com.github.javafaker.Faker;
 import tests.api.steps.ProjectSteps;
 
@@ -25,11 +25,11 @@ public class CreateProjectFactory {
                 .build();
     }
 
-    public void createProject() {
-        ProjectSteps.createProject(project);
+    public void createProject(Integer statusCode) {
+        ProjectSteps.createProject(project, statusCode);
     }
 
-    public void deleteProject(String projectCode) {
-        ProjectSteps.deleteProject(projectCode);
+    public void deleteProject(String projectCode, Integer statusCode) {
+        ProjectSteps.deleteProject(projectCode, statusCode);
     }
 }

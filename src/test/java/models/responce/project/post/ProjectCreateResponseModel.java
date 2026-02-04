@@ -1,4 +1,4 @@
-package models.responce.project;
+package models.responce.project.post;
 
 import lombok.Data;
 

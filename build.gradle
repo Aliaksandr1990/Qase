@@ -27,7 +27,8 @@ dependencies {
             "com.github.javafaker:javafaker:$javafakerVersion",
             "org.assertj:assertj-core:3.27.6",
             "io.rest-assured:rest-assured:6.0.0",
-            "io.qameta.allure:allure-rest-assured:2.32.0")
+            "io.qameta.allure:allure-rest-assured:2.32.0",
+            "org.aeonbits.owner:owner:1.0.4")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher",
             "org.aspectj:aspectjweaver:$aspectjweaverVersion")

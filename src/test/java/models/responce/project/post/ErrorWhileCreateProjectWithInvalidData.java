@@ -1,4 +1,4 @@
-package models.responce.project;
+package models.responce.project.post;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ErrorWhileCreateProjectWithInvalidData {
-    private String status;
+    private boolean status;
     private String errorMessage;
 }

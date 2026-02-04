@@ -1,5 +1,7 @@
 package tests.api.specs;
 
+import config.Credentials;
+import config.Driver;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.specification.RequestSpecification;
@@ -12,7 +14,7 @@ import static io.restassured.http.ContentType.JSON;
 public class QASESpec {
 
     public static final RequestSpecification REQ_SPEC = with()
-            .baseUri("https://api.qase.io/v1")
+            .baseUri(Driver.config.getBaseApiUri())
             .filter(withCustomTemplate())
             .log().uri()
             .log().body()
@@ -24,6 +26,5 @@ public class QASESpec {
                 .log(LogDetail.BODY)
                 .expectStatusCode(statusCode)
                 .build();
-
     }
 }

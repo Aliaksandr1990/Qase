@@ -1,11 +1,10 @@
 package tests.api.steps;
 
 import io.qameta.allure.Step;
-import models.request.project.ProjectRequestModel;
-import models.responce.project.EntitiesItem;
-import models.responce.project.ErrorWhileCreateProjectWithInvalidData;
-import models.responce.project.ProjectCreateResponseModel;
-import models.responce.project.ProjectDeleteResponseModel;
+import io.restassured.response.ValidatableResponse;
+import models.request.project.post.ProjectRequestModel;
+import models.responce.project.get.EntitiesItem;
+import models.responce.project.get.Entity;
 
 import java.util.List;
 
@@ -18,28 +17,27 @@ public class ProjectSteps {
     static String path = "/project";
 
     @Step("Создать проект с рандомными данными")
-    public static ProjectCreateResponseModel createProject(ProjectRequestModel projectRequest) {
+    public static ValidatableResponse createProject(ProjectRequestModel projectRequest, Integer statusCode) {
         return given()
                 .spec(REQ_SPEC)
                 .body(projectRequest)
                 .post(path)
                 .then()
-                .spec(responseWithStatusCode(200))
-                .extract().as(ProjectCreateResponseModel.class);
+                .spec(responseWithStatusCode(statusCode));
     }
 
     @Step("Удалить проект с кодом {0}")
-    public static ProjectDeleteResponseModel deleteProject(String projectCode) {
+    public static ValidatableResponse deleteProject(String projectCode, Integer statusCode) {
         return given()
                 .spec(REQ_SPEC)
                 .delete(path + "/" + projectCode.toUpperCase())
                 .then()
-                .spec(responseWithStatusCode(200))
-                .extract().as(ProjectDeleteResponseModel.class);
+                .spec(responseWithStatusCode(statusCode));
+
     }
 
     @Step("Получить проект из списка")
-    public static List<EntitiesItem> getListProject() {
+    public static List<EntitiesItem> getProjectFromList() {
         final String JSON_PATH = "result.entities";
         return given()
                 .spec(REQ_SPEC)
@@ -51,15 +49,15 @@ public class ProjectSteps {
                 .getList(JSON_PATH, EntitiesItem.class);
     }
 
-    @Step("Создать проект с невалидными данными и получить сообщение об ошибке")
-    public static ErrorWhileCreateProjectWithInvalidData
-    createProjectExpectingError(ProjectRequestModel invalidData) {
+    @Step("Получить список проектов")
+    public static  List<Entity> getListProjects() {
         return given()
                 .spec(REQ_SPEC)
-                .body(invalidData)
-                .post(path)
+                .get(path)
                 .then()
-                .spec(responseWithStatusCode(400))
-                .extract().as(ErrorWhileCreateProjectWithInvalidData.class);
+                .spec(responseWithStatusCode(200))
+                .extract()
+                .jsonPath()
+                .getList("data", Entity.class);
     }
 }
