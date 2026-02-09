@@ -1,5 +1,6 @@
 package tests.ui;
 
+import config.Credentials;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,7 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import tests.BaseTest;
 
 import static io.qameta.allure.Allure.step;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Owner("mkarpovich")
 @Feature("Authorization")
@@ -32,14 +33,14 @@ public class LoginTest extends BaseTest {
     })
     public void userMustBeAutWithValidLoginAndPassword() {
         loginPage.setValueEmailInput("akytat@mailto.plus")
-                .setValuePasswordInput("20091989Qwe!!!")
+                .setValuePasswordInput(Credentials.config.getPassword())
                 .clickSignInButton();
 
         step("Ожидаемый результат: открыта страница Projects", () -> {
-            Assertions.assertAll(
-                    () -> Assertions.assertNotEquals("Projects!!!", projectPage.titleMustHaveText()),
-                    () -> Assertions.assertTrue(projectPage.titleMustHaveText().startsWith("Proj")),
-                    () -> Assertions.assertEquals("Projects", projectPage.titleMustHaveText())
+            assertAll(() -> assertNotEquals("Projects!!!", projectPage.titleMustHaveText()),
+                    () -> assertTrue(projectPage.titleMustHaveText().startsWith("Proj")),
+
+                    () -> assertEquals("Projects", projectPage.titleMustHaveText())
             );
         });
     }
