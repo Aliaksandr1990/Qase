@@ -46,11 +46,7 @@ public class LoginTest extends BaseTest {
 
     @Story("Валидация полей ввода")
     @Severity(SeverityLevel.NORMAL)
-    @Tags({
-            @Tag("NORMAL"),
-            @Tag("UI-test"),
-            @Tag("Authorization")
-    })
+
     @CsvSource({
             ", 20091989Qwe!!!",
             "akytat@mailto.plus, ",
@@ -71,11 +67,7 @@ public class LoginTest extends BaseTest {
 
     @Story("Валидация полей ввода")
     @Severity(SeverityLevel.NORMAL)
-    @Tags({
-            @Tag("NORMAL"),
-            @Tag("UI-test"),
-            @Tag("Authorization")
-    })
+
     @CsvFileSource(resources = "/testData/loginTestData/incorrectDates.scv")
     @ParameterizedTest(name = "Проверка получения сообщения об ошибке при попытке авторизации пользователя " +
             "с помощью некорректного логина: {0} и пароля: {1}")

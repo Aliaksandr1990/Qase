@@ -26,11 +26,7 @@ public class SuiteTest extends BaseTest {
     @DisplayName("Проверка создания сьюты с валидными данными")
     @Story("Создание сьюты")
     @Severity(SeverityLevel.BLOCKER)
-    @Tags({
-            @Tag("BLOCKER"),
-            @Tag("UI-test"),
-            @Tag("Suite")
-    })
+
     public void suiteMustBeCreatedWithValidData() {
         loginPage.setValueEmailInput(email)
                 .setValuePasswordInput(password)
@@ -53,11 +49,7 @@ public class SuiteTest extends BaseTest {
     @DisplayName("Проверка удаления сьюты")
     @Story("Удаление сьюты")
     @Severity(SeverityLevel.BLOCKER)
-    @Tags({
-            @Tag("BLOCKER"),
-            @Tag("UI-test"),
-            @Tag("Suite")
-    })
+
     public void suiteMustBeDeleted() {
         loginPage.setValueEmailInput(email)
                 .setValuePasswordInput(password)
